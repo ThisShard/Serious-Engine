@@ -19,10 +19,18 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Models/Items/ItemHolder/ItemHolder.h"
 %}
 
+// overtop type 
+enum HealthOverTopType {
+  0 OTT_DEFAULT            "Game default", // pill health
+  1 OTT_NO_OVERTOP         "No overtop", // pill health
+  2 OTT_OVERTOP            "Overtop", // pill health
+};
+
 %{
 // used to render certain entities only for certain players (like picked items, etc.)
 extern ULONG _ulPlayerRenderingMask;
 %}
+
 
 class export CItem : CMovableModelEntity {
 name      "Item";

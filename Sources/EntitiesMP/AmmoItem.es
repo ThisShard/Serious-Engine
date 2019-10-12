@@ -57,6 +57,8 @@ thumbnail "Thumbnails\\AmmoItem.tbn";
 
 properties:
   1 enum AmmoItemType  m_EaitType    "Type" 'Y' = AIT_SHELLS,     // health type
+  2 FLOAT  m_fCustomAmount        "Custom amount" 'M' = -1.0f,
+  3 FLOAT  m_fAmountMultiplier    "Amount multiplier" 'U' = 1.0f,
 
 components:
   0 class   CLASS_BASE        "Classes\\Item.ecl",
@@ -244,7 +246,7 @@ functions:
   {
     switch (m_EaitType) {
       case AIT_SHELLS:
-        m_fValue = 10.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 10.0f)*m_fAmountMultiplier;
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 30.0f; 
         m_strDescription.PrintF("Shells: %d", (int) m_fValue);
         // set appearance
@@ -253,7 +255,7 @@ functions:
         StretchItem(FLOAT3D(0.75f, 0.75f, 0.75f));
         break;
       case AIT_BULLETS:
-        m_fValue = 50.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 50.0f)*m_fAmountMultiplier;
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 30.0f; 
         m_strDescription.PrintF("Bullets: %d", (int) m_fValue);
         // set appearance
@@ -262,7 +264,7 @@ functions:
         StretchItem(FLOAT3D(0.75f, 0.75f, 0.75f));
         break;
       case AIT_ROCKETS:
-        m_fValue = 5.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 5.0f)*m_fAmountMultiplier;
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 30.0f; 
         m_strDescription.PrintF("Rockets: %d", (int) m_fValue);
         // set appearance
@@ -281,7 +283,7 @@ functions:
         StretchItem(FLOAT3D(0.75f, 0.75f, 0.75f));
         break;
       case AIT_GRENADES:
-        m_fValue = 5.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 5.0f)*m_fAmountMultiplier;
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 30.0f; 
         m_strDescription.PrintF("Grenades: %d", (int) m_fValue);
         // set appearance
@@ -290,7 +292,7 @@ functions:
         StretchItem(FLOAT3D(0.75f, 0.75f, 0.75f));
         break;
       case AIT_ELECTRICITY:
-        m_fValue = 50.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 50.0f)*m_fAmountMultiplier;
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 30.0f; 
         m_strDescription.PrintF("Electricity: %d", (int) m_fValue);
         // set appearance
@@ -303,7 +305,7 @@ functions:
         break;
 /*
       case AIT_NUKEBALL:
-        m_fValue = 1.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 1.0f)*m_fAmountMultiplier;
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 30.0f; 
         m_strDescription.PrintF("Nuke ball: %d", (int) m_fValue);
         // set appearance
@@ -313,7 +315,7 @@ functions:
         break;
         */
       case AIT_IRONBALLS:
-        m_fValue = 4.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 4.0f)*m_fAmountMultiplier;
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 30.0f; 
         m_strDescription.PrintF("Iron balls: %d", (int) m_fValue);
         // set appearance
@@ -322,7 +324,7 @@ functions:
         StretchItem(FLOAT3D(0.75f, 0.75f, 0.75f));
         break;
       case AIT_NAPALM:
-        m_fValue = 100.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 100.0f)*m_fAmountMultiplier;
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 30.0f; 
         m_strDescription.PrintF("Napalm: %d", (int) m_fValue);
         // set appearance
@@ -331,7 +333,7 @@ functions:
         StretchItem(FLOAT3D(1.25f, 1.25f, 1.25f));
         break;
       case AIT_SERIOUSPACK:
-        m_fValue = 1.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 1.0f)*m_fAmountMultiplier;
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 30.0f; 
         m_strDescription.PrintF("SeriousPack: %d", (int) m_fValue);
         // set appearance
@@ -340,7 +342,7 @@ functions:
         StretchItem(FLOAT3D(0.5f, 0.5f, 0.5f));
         break;
       case AIT_BACKPACK:
-        m_fValue = 1.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 1.0f)*m_fAmountMultiplier;
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 30.0f; 
         m_strDescription.PrintF("BackPack: %d", (int) m_fValue);
         // set appearance
@@ -349,7 +351,7 @@ functions:
         StretchItem(FLOAT3D(0.5f, 0.5f, 0.5f));
         break;
       case AIT_SNIPERBULLETS:
-        m_fValue = 5.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 5.0f)*m_fAmountMultiplier;
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 30.0f; 
         m_strDescription.PrintF("Sniper bullets: %d", (int) m_fValue);
         // set appearance

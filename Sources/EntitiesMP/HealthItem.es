@@ -44,6 +44,9 @@ properties:
   1 enum HealthItemType m_EhitType    "Type" 'Y' = HIT_SMALL,     // health type
   2 BOOL m_bOverTopHealth             = FALSE,  // can be received over top health
   3 INDEX m_iSoundComponent = 0,
+  4 FLOAT  m_fCustomAmount        "Custom amount" 'M' = -1.0f,
+  5 FLOAT  m_fAmountMultiplier    "Amount multiplier" 'U' = 1.0f,
+  6 enum HealthOverTopType m_bOverTopType       "Overtop type" = OTT_DEFAULT,
 
 components:
   0 class   CLASS_BASE        "Classes\\Item.ecl",
@@ -148,8 +151,11 @@ functions:
       case HIT_PILL:
         StartModelAnim(ITEMHOLDER_ANIM_SMALLOSCILATION, AOF_LOOPING|AOF_NORESTART);
         ForceCollisionBoxIndexChange(ITEMHOLDER_COLLISION_BOX_SMALL);
-        m_fValue = 1.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 1.0f)*m_fAmountMultiplier;
         m_bOverTopHealth = TRUE;
+		if (m_bOverTopType != OTT_DEFAULT) {
+			m_bOverTopHealth = m_bOverTopType == OTT_OVERTOP ? TRUE : FALSE;
+		}
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 10.0f; 
         m_strDescription.PrintF("Pill - H:%g  T:%g", m_fValue, m_fRespawnTime);
         // set appearance
@@ -162,8 +168,11 @@ functions:
       case HIT_SMALL:
         StartModelAnim(ITEMHOLDER_ANIM_SMALLOSCILATION, AOF_LOOPING|AOF_NORESTART);
         ForceCollisionBoxIndexChange(ITEMHOLDER_COLLISION_BOX_MEDIUM);
-        m_fValue = 10.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 10.0f)*m_fAmountMultiplier;
         m_bOverTopHealth = FALSE;
+		if (m_bOverTopType != OTT_DEFAULT) {
+			m_bOverTopHealth = m_bOverTopType == OTT_OVERTOP ? TRUE : FALSE;
+		}
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 10.0f; 
         m_strDescription.PrintF("Small - H:%g  T:%g", m_fValue, m_fRespawnTime);
         // set appearance
@@ -176,8 +185,11 @@ functions:
       case HIT_MEDIUM:
         StartModelAnim(ITEMHOLDER_ANIM_SMALLOSCILATION, AOF_LOOPING|AOF_NORESTART);
         ForceCollisionBoxIndexChange(ITEMHOLDER_COLLISION_BOX_MEDIUM);
-        m_fValue = 25.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 25.0f)*m_fAmountMultiplier;
         m_bOverTopHealth = FALSE;
+		if (m_bOverTopType != OTT_DEFAULT) {
+			m_bOverTopHealth = m_bOverTopType == OTT_OVERTOP ? TRUE : FALSE;
+		}
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 25.0f; 
         m_strDescription.PrintF("Medium - H:%g  T:%g", m_fValue, m_fRespawnTime);
         // set appearance
@@ -189,8 +201,11 @@ functions:
       case HIT_LARGE:
         StartModelAnim(ITEMHOLDER_ANIM_SMALLOSCILATION, AOF_LOOPING|AOF_NORESTART);
         ForceCollisionBoxIndexChange(ITEMHOLDER_COLLISION_BOX_MEDIUM);
-        m_fValue = 50.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 50.0f)*m_fAmountMultiplier;
         m_bOverTopHealth = FALSE;
+		if (m_bOverTopType != OTT_DEFAULT) {
+			m_bOverTopHealth = m_bOverTopType == OTT_OVERTOP ? TRUE : FALSE;
+		}
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 60.0f; 
         m_strDescription.PrintF("Large - H:%g  T:%g", m_fValue, m_fRespawnTime);
         // set appearance
@@ -202,8 +217,11 @@ functions:
       case HIT_SUPER:
         StartModelAnim(ITEMHOLDER_ANIM_SMALLOSCILATION, AOF_LOOPING|AOF_NORESTART);
         ForceCollisionBoxIndexChange(ITEMHOLDER_COLLISION_BOX_MEDIUM);
-        m_fValue = 100.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 100.0f)*m_fAmountMultiplier;
         m_bOverTopHealth = TRUE;
+		if (m_bOverTopType != OTT_DEFAULT) {
+			m_bOverTopHealth = m_bOverTopType == OTT_OVERTOP ? TRUE : FALSE;
+		}
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 120.0f; 
         m_strDescription.PrintF("Super - H:%g  T:%g", m_fValue, m_fRespawnTime);
         // set appearance

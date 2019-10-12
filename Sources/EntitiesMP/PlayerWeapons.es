@@ -4014,7 +4014,6 @@ procedures:
 
     // if has no ammo select new weapon
 	
-	//if (!m_bHasAmmo || (m_iCurrentWeapon==WEAPON_NONE && m_iAvailableWeapons > 0)) {
     if (!m_bHasAmmo || (m_iCurrentWeapon==WEAPON_NONE && IsOtherWeaponsAvailiable())) {
       SelectNewWeapon();
       jump Idle();

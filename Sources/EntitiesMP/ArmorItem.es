@@ -45,6 +45,9 @@ properties:
   1 enum ArmorItemType m_EaitType     "Type" 'Y' = ARIT_SHARD,    // armor type
   2 BOOL m_bOverTopArmor  = FALSE,   // can be received over top armor
   3 INDEX m_iSoundComponent = 0,
+  4 FLOAT  m_fCustomAmount        "Custom amount" 'M' = -1.0f,
+  5 FLOAT  m_fAmountMultiplier    "Amount multiplier" 'U' = 1.0f,
+  6 enum HealthOverTopType m_bOverTopType       "Overtop type" = OTT_DEFAULT,
 
 components:
   0 class   CLASS_BASE        "Classes\\Item.ecl",
@@ -156,8 +159,11 @@ functions:
     switch (m_EaitType) {
       case ARIT_SHARD:
         ForceCollisionBoxIndexChange(ITEMHOLDER_COLLISION_BOX_SMALL);
-        m_fValue = 1.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 1.0f)*m_fAmountMultiplier;
         m_bOverTopArmor = TRUE;
+		if (m_bOverTopType != OTT_DEFAULT) {
+			m_bOverTopArmor = m_bOverTopType == OTT_OVERTOP ? TRUE : FALSE;
+		}
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 10.0f; 
         m_strDescription.PrintF("Shard - H:%g  T:%g", m_fValue, m_fRespawnTime);
         // set appearance
@@ -168,8 +174,11 @@ functions:
         break;
       case ARIT_SMALL:
         ForceCollisionBoxIndexChange(ITEMHOLDER_COLLISION_BOX_MEDIUM);
-        m_fValue = 25.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 25.0f)*m_fAmountMultiplier;
         m_bOverTopArmor = FALSE;
+		if (m_bOverTopType != OTT_DEFAULT) {
+			m_bOverTopArmor = m_bOverTopType == OTT_OVERTOP ? TRUE : FALSE;
+		}
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 10.0f; 
         m_strDescription.PrintF("Small - H:%g  T:%g", m_fValue, m_fRespawnTime);
         // set appearance
@@ -180,8 +189,11 @@ functions:
         break;
       case ARIT_MEDIUM: {
         ForceCollisionBoxIndexChange(ITEMHOLDER_COLLISION_BOX_MEDIUM);
-        m_fValue = 50.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 50.0f)*m_fAmountMultiplier;
         m_bOverTopArmor = FALSE;
+		if (m_bOverTopType != OTT_DEFAULT) {
+			m_bOverTopArmor = m_bOverTopType == OTT_OVERTOP ? TRUE : FALSE;
+		}
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 25.0f; 
         m_strDescription.PrintF("Medium - H:%g  T:%g", m_fValue, m_fRespawnTime);
         // set appearance
@@ -192,8 +204,11 @@ functions:
                         } break;
       case ARIT_STRONG:
         ForceCollisionBoxIndexChange(ITEMHOLDER_COLLISION_BOX_MEDIUM);
-        m_fValue = 100.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 100.0f)*m_fAmountMultiplier;
         m_bOverTopArmor = FALSE;
+		if (m_bOverTopType != OTT_DEFAULT) {
+			m_bOverTopArmor = m_bOverTopType == OTT_OVERTOP ? TRUE : FALSE;
+		}
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 60.0f; 
         m_strDescription.PrintF("Strong - H:%g  T:%g", m_fValue, m_fRespawnTime);
         // set appearance
@@ -204,8 +219,11 @@ functions:
         break;
       case ARIT_SUPER:
         ForceCollisionBoxIndexChange(ITEMHOLDER_COLLISION_BOX_MEDIUM);
-        m_fValue = 200.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 200.0f)*m_fAmountMultiplier;
         m_bOverTopArmor = TRUE;
+		if (m_bOverTopType != OTT_DEFAULT) {
+			m_bOverTopArmor = m_bOverTopType == OTT_OVERTOP ? TRUE : FALSE;
+		}
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 120.0f; 
         m_strDescription.PrintF("Super - H:%g  T:%g", m_fValue, m_fRespawnTime);
         // set appearance
@@ -217,8 +235,11 @@ functions:
         break;
       case ARIT_HELM:
         ForceCollisionBoxIndexChange(ITEMHOLDER_COLLISION_BOX_SMALL);
-        m_fValue = 5.0f;
+        m_fValue = (!(m_fCustomAmount<0) ? m_fCustomAmount : 5.0f)*m_fAmountMultiplier;
         m_bOverTopArmor = FALSE;
+		if (m_bOverTopType != OTT_DEFAULT) {
+			m_bOverTopArmor = m_bOverTopType == OTT_OVERTOP ? TRUE : FALSE;
+		}
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 10.0f; 
         m_strDescription.PrintF("Helm - H:%g  T:%g", m_fValue, m_fRespawnTime);
         // set appearance
