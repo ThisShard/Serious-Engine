@@ -36,6 +36,9 @@ properties:
   6 BOOL m_bActive              "Active" 'A' = TRUE,
   7 BOOL m_bPlayersOnly         "Players only" 'P' = TRUE,
   8 BOOL m_bForceStop           "Force stop" 'F' = FALSE,
+  9 BOOL m_bTelefrag            "Telefrag" 'R' = TRUE,
+ 10 BOOL m_bRelative            "Relative position" 'P' = FALSE,
+ 11 BOOL m_bShowEffect          "Show effect" 'S' = TRUE,
 
 
 components:
@@ -58,19 +61,22 @@ functions:
   void TeleportEntity(CEntity *pen, const CPlacement3D &pl)
   {
     // teleport back
-    pen->Teleport(pl);
+    pen->Teleport(pl, m_bTelefrag);
 
-    // spawn teleport effect
-    ESpawnEffect ese;
-    ese.colMuliplier = C_WHITE|CT_OPAQUE;
-    ese.betType = BET_TELEPORT;
-    ese.vNormal = FLOAT3D(0,1,0);
-    FLOATaabbox3D box;
-    pen->GetBoundingBox(box);
-    FLOAT fEntitySize = box.Size().MaxNorm()*2;
-    ese.vStretch = FLOAT3D(fEntitySize, fEntitySize, fEntitySize);
-    CEntityPointer penEffect = CreateEntity(pl, CLASS_BASIC_EFFECT);
-    penEffect->Initialize(ese);
+	if (m_bShowEffect==TRUE) 
+	{
+	  // spawn teleport effect
+	  ESpawnEffect ese;
+	  ese.colMuliplier = C_WHITE|CT_OPAQUE;
+	  ese.betType = BET_TELEPORT;
+	  ese.vNormal = FLOAT3D(0,1,0);
+	  FLOATaabbox3D box;
+	  pen->GetBoundingBox(box);
+	  FLOAT fEntitySize = box.Size().MaxNorm()*2;
+	  ese.vStretch = FLOAT3D(fEntitySize, fEntitySize, fEntitySize);
+	  CEntityPointer penEffect = CreateEntity(pl, CLASS_BASIC_EFFECT);
+	  penEffect->Initialize(ese);
+	}
   }
 
 
@@ -115,7 +121,21 @@ procedures:
             if (m_bPlayersOnly && !IsOfClass(ePass.penOther, "Player")) {
             resume;
             }
-            TeleportEntity(ePass.penOther, m_penTarget->GetPlacement());
+
+			if (m_bRelative==TRUE)
+			{
+				CPlacement3D passPlacement = ePass.penOther->GetPlacement();
+				CPlacement3D relativePlacement = CPlacement3D(passPlacement.pl_PositionVector, passPlacement.pl_OrientationAngle);
+				//relativePlacement.RelativeToRelative(GetPlacement(), m_penTarget->GetPlacement());
+				relativePlacement.AbsoluteToRelative(GetPlacement());
+				relativePlacement.RelativeToAbsolute(m_penTarget->GetPlacement());
+				TeleportEntity(ePass.penOther, relativePlacement);
+			}
+			else 
+			{
+				TeleportEntity(ePass.penOther, m_penTarget->GetPlacement());
+			}
+
             if (m_bForceStop && (ePass.penOther->GetPhysicsFlags()&EPF_MOVABLE) ) {
               ((CMovableEntity*)&*ePass.penOther)->ForceFullStop();
             }
