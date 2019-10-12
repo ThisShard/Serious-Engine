@@ -571,6 +571,8 @@ functions:
     CPlayer &pl = (CPlayer&)*m_penPlayer;
     pmoModel = &(pl.GetModelObject()->GetAttachmentModel(PLAYER_ATTACHMENT_TORSO)->amo_moModelObject);
     switch (iWeapon) {
+      case WEAPON_NONE:
+        break;
     // *********** KNIFE ***********
       case WEAPON_KNIFE:
         AddWeaponAttachment(BODY_ATTACHMENT_KNIFE, MODEL_KNIFE,
@@ -1261,7 +1263,6 @@ functions:
       INDEX iWeapon = ((CPlayerWeapons&)*(((CPlayer&)*m_penPlayer).m_penWeapons)).m_iCurrentWeapon;
       switch (iWeapon) {
         case WEAPON_NONE:
-          break;
         case WEAPON_KNIFE: case WEAPON_COLT: case WEAPON_DOUBLECOLT: //case WEAPON_PIPEBOMB:
           iAnim += BODY_ANIM_COLT_SWIM_STAND-BODY_ANIM_COLT_STAND;
           break;
@@ -1348,6 +1349,7 @@ functions:
     pmoModel = &(pl.GetModelObject()->GetAttachmentModel(PLAYER_ATTACHMENT_TORSO)->amo_moModelObject);
     switch (m_iWeaponLast) {
       case WEAPON_NONE:
+		break;
       case WEAPON_KNIFE:
         pmoModel->RemoveAttachmentModel(BODY_ATTACHMENT_KNIFE);
         break;

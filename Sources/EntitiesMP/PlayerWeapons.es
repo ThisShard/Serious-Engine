@@ -477,7 +477,7 @@ void CPlayerWeapons_Init(void) {
   _pShell->DeclareSymbol("persistent user FLOAT plr_tmSnoopingDelay;", &plr_tmSnoopingDelay);
 
   // precache base weapons
-  CPlayerWeapons_Precache(0x03);
+  CPlayerWeapons_Precache(0x00);
 }
 
 // weapons positions for raycasting and firing
@@ -541,10 +541,10 @@ properties:
   1 CEntityPointer m_penPlayer,       // player which owns it
   2 BOOL m_bFireWeapon = FALSE,       // weapon is firing
   3 BOOL m_bHasAmmo    = FALSE,       // weapon has ammo
-  4 enum WeaponType m_iCurrentWeapon  = WEAPON_KNIFE,    // currently active weapon (internal)
-  5 enum WeaponType m_iWantedWeapon   = WEAPON_KNIFE,     // wanted weapon (internal)
-  6 enum WeaponType m_iPreviousWeapon = WEAPON_KNIFE,   // previous active weapon (internal)
- 11 INDEX m_iAvailableWeapons = 0x01,   // avaible weapons
+  4 enum WeaponType m_iCurrentWeapon  = WEAPON_NONE,    // currently active weapon (internal)
+  5 enum WeaponType m_iWantedWeapon   = WEAPON_NONE,     // wanted weapon (internal)
+  6 enum WeaponType m_iPreviousWeapon = WEAPON_NONE,   // previous active weapon (internal)
+ 11 INDEX m_iAvailableWeapons = 0x00,   // avaible weapons
  12 BOOL  m_bChangeWeapon = FALSE,      // change current weapon
  13 BOOL  m_bReloadWeapon = FALSE,      // reload weapon
  14 BOOL  m_bMirrorFire   = FALSE,      // fire with mirror model
@@ -2395,7 +2395,7 @@ functions:
   // clear weapons
   void ClearWeapons(void) {
     // give/take weapons
-    m_iAvailableWeapons = 0x03;
+    m_iAvailableWeapons = 0x00;
     m_iColtBullets = 6;
     m_iBullets = 0;
     m_iShells = 0;
@@ -2422,7 +2422,7 @@ functions:
     ULONG ulOldWeapons = m_iAvailableWeapons;
     // give/take weapons
     m_iAvailableWeapons &= ~iTakeWeapons;
-    m_iAvailableWeapons |= 0x03|iGiveWeapons;
+    m_iAvailableWeapons |= iGiveWeapons;
     m_iAvailableWeapons &= WEAPONS_ALLAVAILABLEMASK;
     // m_iAvailableWeapons &= ~WEAPONS_DISABLEDMASK;
     // find which weapons are new
@@ -2583,6 +2583,7 @@ functions:
     // add ammo
     switch (iWeapon) {
       // unlimited ammo
+      case WEAPON_NONE:
       case WEAPON_KNIFE:
       case WEAPON_COLT:
       case WEAPON_DOUBLECOLT:
@@ -2688,6 +2689,7 @@ functions:
     switch (m_iCurrentWeapon) {
       default:
         ASSERT(FALSE);
+      case WEAPON_NONE:
       case WEAPON_KNIFE:
       case WEAPON_COLT:
       case WEAPON_DOUBLECOLT:
@@ -2721,6 +2723,7 @@ functions:
     EWeaponItem &Ewi = (EWeaponItem&)ee;
     INDEX wit = Ewi.iWeapon;
     switch (Ewi.iWeapon) {
+      case WIT_KNIFE: Ewi.iWeapon = WEAPON_KNIFE; break;
       case WIT_COLT: Ewi.iWeapon = WEAPON_COLT; break;
       case WIT_SINGLESHOTGUN: Ewi.iWeapon = WEAPON_SINGLESHOTGUN; break;
       case WIT_DOUBLESHOTGUN: Ewi.iWeapon = WEAPON_DOUBLESHOTGUN; break;
@@ -2759,6 +2762,10 @@ functions:
 
     CTFileName fnmMsg;
     switch (wit) {
+      case WIT_KNIFE:            
+        ((CPlayer&)*m_penPlayer).ItemPicked(TRANS("Military Knife"), 0);
+        fnmMsg = CTFILENAME("Data\\Messages\\Weapons\\knife.txt"); 
+        break;
       case WIT_COLT:            
         ((CPlayer&)*m_penPlayer).ItemPicked(TRANS("Shofield .45 w/ TMAR"), 0);
         fnmMsg = CTFILENAME("Data\\Messages\\Weapons\\colt.txt"); 
@@ -3106,7 +3113,8 @@ functions:
         WeaponSelectOk(WEAPON_SINGLESHOTGUN)||
         WeaponSelectOk(WEAPON_DOUBLECOLT)||
         WeaponSelectOk(WEAPON_COLT)||
-        WeaponSelectOk(WEAPON_KNIFE);
+        WeaponSelectOk(WEAPON_KNIFE)||
+		WeaponSelectOk(WEAPON_NONE);
         break;
       case WEAPON_IRONCANNON:
         WeaponSelectOk(WEAPON_ROCKETLAUNCHER)||
@@ -3151,7 +3159,7 @@ functions:
   // does weapon have ammo
   BOOL HasAmmo(WeaponType EwtWeapon) {
     switch (EwtWeapon) {
-      case WEAPON_KNIFE: case WEAPON_COLT: case WEAPON_DOUBLECOLT: return TRUE;
+      case WEAPON_NONE: case WEAPON_KNIFE: case WEAPON_COLT: case WEAPON_DOUBLECOLT: return TRUE;
       case WEAPON_SINGLESHOTGUN: return (m_iShells>0);
       case WEAPON_DOUBLESHOTGUN: return (m_iShells>1);
       case WEAPON_TOMMYGUN: return (m_iBullets>0);
@@ -3978,7 +3986,7 @@ procedures:
     m_bHasAmmo = HasAmmo(m_iCurrentWeapon);
 
     // if has no ammo select new weapon
-    if (!m_bHasAmmo) {
+    if (!m_bHasAmmo || (m_iCurrentWeapon==WEAPON_NONE && m_iAvailableWeapons > 0)) {
       SelectNewWeapon();
       jump Idle();
     }
@@ -4016,6 +4024,7 @@ procedures:
         on (EBegin) : {
           // fire one shot
           switch (m_iCurrentWeapon) {
+		    case WEAPON_NONE: break;
             case WEAPON_KNIFE: call SwingKnife(); break;
             case WEAPON_COLT: call FireColt(); break;
             case WEAPON_DOUBLECOLT: call FireDoubleColt(); break;
@@ -5477,6 +5486,7 @@ procedures:
     // select new mode change animation
     FLOAT fWait = 0.0f;
     switch (m_iCurrentWeapon) {
+	  case WEAPON_NONE: break;
       case WEAPON_KNIFE: fWait = KnifeBoring(); break;
       case WEAPON_COLT: fWait = ColtBoring(); break;
       case WEAPON_DOUBLECOLT: fWait = DoubleColtBoring(); break;

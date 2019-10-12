@@ -53,6 +53,7 @@ enum WeaponItemType {
  11 WIT_CHAINSAW          "Chainsaw",
  12 WIT_CANNON            "Cannon",
  13 WIT_GHOSTBUSTER       "obsolete",
+ 14 WIT_KNIFE             "Knife",
 };
 
 // event for sending through receive item
@@ -76,7 +77,11 @@ properties:
 
 components:
   0 class   CLASS_BASE        "Classes\\Item.ecl",
-
+  
+// ************** KNIFE **************
+ 20 model   MODEL_KNIFEITEM             "Models\\Weapons\\Knife\\KnifeItem.mdl",
+ 21 texture TEXTURE_KNIFEITEM           "Models\\Weapons\\Knife\\KnifeItem.tex",
+ 
 // ************** COLT **************
  30 model   MODEL_COLT                  "Models\\Weapons\\Colt\\ColtItem.mdl",
  31 model   MODEL_COLTCOCK              "Models\\Weapons\\Colt\\ColtCock.mdl",
@@ -193,6 +198,7 @@ functions:
   void Precache(void) {
     PrecacheSound(SOUND_PICK);
     switch (m_EwitType) {
+      case WIT_KNIFE:            CPlayerWeapons_Precache(1<<(INDEX(WEAPON_KNIFE           )-1)); break;
       case WIT_COLT:            CPlayerWeapons_Precache(1<<(INDEX(WEAPON_COLT           )-1)); break;
       case WIT_SINGLESHOTGUN:   CPlayerWeapons_Precache(1<<(INDEX(WEAPON_SINGLESHOTGUN  )-1)); break;
       case WIT_DOUBLESHOTGUN:   CPlayerWeapons_Precache(1<<(INDEX(WEAPON_DOUBLESHOTGUN  )-1)); break;
@@ -227,6 +233,7 @@ functions:
       return;
     }
     switch (m_EwitType) {
+      case WIT_KNIFE:             Particles_Atomic(this, 1.5f, 1.5f, PT_STAR07, 12);  break;
       case WIT_COLT:             Particles_Atomic(this, 1.5f, 1.5f, PT_STAR07, 12);  break;
       case WIT_SINGLESHOTGUN:    Particles_Atomic(this, 1.5f, 1.5f, PT_STAR07, 12);  break;
       case WIT_DOUBLESHOTGUN:    Particles_Atomic(this, 1.5f, 1.5f, PT_STAR07, 12);  break;
@@ -251,6 +258,14 @@ functions:
     FLOAT3D vDMStretch = FLOAT3D( 2.0f, 2.0f, 2.0f);
     
     switch (m_EwitType) {
+    // *********** KNIFE ***********
+      case WIT_KNIFE:
+        m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 10.0f; 
+        m_strDescription.PrintF("Knife");
+        AddItem(MODEL_KNIFEITEM, TEXTURE_KNIFEITEM, 0, 0, 0);
+        StretchItem( bDM ?  vDMStretch : FLOAT3D(4.5f, 4.5f, 4.5f));
+        break;
+
     // *********** COLT ***********
       case WIT_COLT:
         m_fRespawnTime = (m_fCustomRespawnTime>0) ? m_fCustomRespawnTime : 10.0f; 
