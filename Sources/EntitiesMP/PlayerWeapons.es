@@ -2428,7 +2428,7 @@ functions:
     // find which weapons are new
     ULONG ulNewWeapons = m_iAvailableWeapons&~ulOldWeapons;
     // for each new weapon
-    for(INDEX iWeapon=WEAPON_KNIFE; iWeapon<WEAPON_LAST; iWeapon++) {
+    for(INDEX iWeapon=WEAPON_NONE; iWeapon<WEAPON_LAST; iWeapon++) {
       if ( ulNewWeapons & (1<<(iWeapon-1)) ) {
         // add default amount of ammo
         AddDefaultAmmoForWeapon(iWeapon, fMaxAmmoRatio);
@@ -3077,12 +3077,35 @@ functions:
     }
     return WEAPON_NONE;
   };
-
+  
+  // check if weapons availiable
+  BOOL IsOtherWeaponsAvailiable()
+  {
+    for(INDEX iWeapon=WEAPON_KNIFE; iWeapon<WEAPON_LAST; iWeapon++) {
+      if (IsWeaponAvailiable((WeaponType)iWeapon)) {
+	    return TRUE;
+      }
+    }
+    return FALSE;
+  }
+  // check if weapon availiable
+  BOOL IsWeaponAvailiable(WeaponType wtToTry)
+  {
+    // if player has weapon and has enough ammo
+    if (wtToTry == WEAPON_NONE || ((1<<(INDEX(wtToTry)-1))&m_iAvailableWeapons)
+      &&HasAmmo(wtToTry)) {
+	  return TRUE;
+    // if no weapon or not enough ammo
+    } else {
+      // selection not ok
+      return FALSE;
+    }
+  }
   // select new weapon if possible
   BOOL WeaponSelectOk(WeaponType wtToTry)
   {
     // if player has weapon and has enough ammo
-    if (((1<<(INDEX(wtToTry)-1))&m_iAvailableWeapons)
+    if (wtToTry == WEAPON_NONE || ((1<<(INDEX(wtToTry)-1))&m_iAvailableWeapons)
       &&HasAmmo(wtToTry)) {
       // if different weapon
       if (wtToTry!=m_iCurrentWeapon) {
@@ -3125,7 +3148,8 @@ functions:
         WeaponSelectOk(WEAPON_SINGLESHOTGUN)||
         WeaponSelectOk(WEAPON_DOUBLECOLT)||
         WeaponSelectOk(WEAPON_COLT)||
-        WeaponSelectOk(WEAPON_KNIFE);
+        WeaponSelectOk(WEAPON_KNIFE)||
+		WeaponSelectOk(WEAPON_NONE);
         break;
       case WEAPON_ROCKETLAUNCHER:
       case WEAPON_GRENADELAUNCHER:
@@ -3137,7 +3161,8 @@ functions:
         WeaponSelectOk(WEAPON_SINGLESHOTGUN)||
         WeaponSelectOk(WEAPON_DOUBLECOLT)||
         WeaponSelectOk(WEAPON_COLT)||
-        WeaponSelectOk(WEAPON_KNIFE);
+        WeaponSelectOk(WEAPON_KNIFE)||
+		WeaponSelectOk(WEAPON_NONE);
         break;
       case WEAPON_LASER:  case WEAPON_FLAMER:  case WEAPON_CHAINSAW:
         WeaponSelectOk(WEAPON_LASER)||
@@ -3148,10 +3173,12 @@ functions:
         WeaponSelectOk(WEAPON_SINGLESHOTGUN)||
         WeaponSelectOk(WEAPON_DOUBLECOLT)||
         WeaponSelectOk(WEAPON_COLT)||
-        WeaponSelectOk(WEAPON_KNIFE);
+        WeaponSelectOk(WEAPON_KNIFE)||
+		WeaponSelectOk(WEAPON_NONE);
         break;
       default:
-        WeaponSelectOk(WEAPON_KNIFE);
+        WeaponSelectOk(WEAPON_KNIFE)||
+		WeaponSelectOk(WEAPON_NONE);
         ASSERT(FALSE);
     }
   };
@@ -3986,7 +4013,9 @@ procedures:
     m_bHasAmmo = HasAmmo(m_iCurrentWeapon);
 
     // if has no ammo select new weapon
-    if (!m_bHasAmmo || (m_iCurrentWeapon==WEAPON_NONE && m_iAvailableWeapons > 0)) {
+	
+	//if (!m_bHasAmmo || (m_iCurrentWeapon==WEAPON_NONE && m_iAvailableWeapons > 0)) {
+    if (!m_bHasAmmo || (m_iCurrentWeapon==WEAPON_NONE && IsOtherWeaponsAvailiable())) {
       SelectNewWeapon();
       jump Idle();
     }
@@ -4024,7 +4053,7 @@ procedures:
         on (EBegin) : {
           // fire one shot
           switch (m_iCurrentWeapon) {
-		    case WEAPON_NONE: break;
+		    case WEAPON_NONE: call DoNothing(); break;
             case WEAPON_KNIFE: call SwingKnife(); break;
             case WEAPON_COLT: call FireColt(); break;
             case WEAPON_DOUBLECOLT: call FireDoubleColt(); break;
@@ -4059,6 +4088,11 @@ procedures:
     }
   };
 
+  // ***************** SWING KNIFE *****************
+  DoNothing() {
+	autowait(0.25f);
+    return EEnd();
+  };
     
   // ***************** SWING KNIFE *****************
   SwingKnife() {
