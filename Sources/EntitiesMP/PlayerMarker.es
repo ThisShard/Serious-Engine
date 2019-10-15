@@ -33,7 +33,7 @@ features "IsImportant";
 properties:
   1 FLOAT m_fHealth          "Health" 'H' = 100.0f,
   2 FLOAT m_fShield          "Shield" 'S' = 0.0f,
-  3 INDEX m_iGiveWeapons     "Give Weapons" 'W' = 0x1,
+  3 INDEX m_iGiveWeapons     "Give Weapons" 'W' = 0x3,
   4 INDEX m_iTakeWeapons     "Take Weapons"  = 0x0,
   5 CTString m_strGroup      "Group" 'G' = "",
   6 BOOL m_bQuickStart       "Quick start" 'Q' = FALSE,
