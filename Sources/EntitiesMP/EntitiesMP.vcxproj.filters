@@ -1874,6 +1874,9 @@
     <CustomBuild Include="WorldLink.es">
       <Filter>Class Files\Tools</Filter>
     </CustomBuild>
+    <CustomBuild Include="WorldLinkFlag.es">
+      <Filter>Class Files\Tools</Filter>
+    </CustomBuild>
     <CustomBuild Include="AirShockwave.es">
       <Filter>Class Files\Weapons</Filter>
     </CustomBuild>

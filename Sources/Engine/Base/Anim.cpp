@@ -361,7 +361,7 @@ void CAnimData::LoadFromScript_t( CTStream *File, CListHead *pFrameFileList) // 
         sscanf( ld_line, "%s", key_word);
         if( key_word == CTString( "ANIM"))
         {
-				  // read file name from line and add it at the end of last path string loaded
+				  // read file name from line and add it at the end of last path string loadedT
 				  sscanf( ld_line, "%s %s", error_str, anim_name);
           // search trough all allready readed animations for macro one
 	        FOREACHINLIST(COneAnimNode, coan_Node, TempAnimationList, itOAN)

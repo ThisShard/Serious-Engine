@@ -18,24 +18,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "StdH.h"
 %}
 
-uses "EntitiesMP/Marker";
-
-// world link
-enum WorldLinkType {
-  1 WLT_FIXED     "Fixed",      // fixed link
-  2 WLT_RELATIVE  "Relative",   // relative link
-};
-
-class CWorldLink : CMarker {
-name      "World link";
+class CLinkFlag : CEntity {
+name      "WorldLinkFlag";
 thumbnail "Thumbnails\\WorldLink.tbn";
-features "IsImportant";
+features  "HasName", "IsTargetable";
 
 properties:
-  1 CTString m_strGroup           "Group" 'G' = "",
-  2 CTFileNameNoDep m_strWorld    "World" 'W' = "",
-  3 BOOL m_bStoreWorld            "Store world" 'S' = FALSE,
-  4 enum WorldLinkType m_EwltType "Type" 'Y' = WLT_RELATIVE,
+  1 CTString m_strFlagName           "Flag name" 'G' = "",
+  3 BOOL m_bIsActivated              "Flag is activated" 'S' = FALSE,
 
 components:
   1 model   MODEL_WORLDLINK     "Models\\Editor\\WorldLink.mdl",
@@ -48,23 +38,30 @@ functions:
  ************************************************************/
   BOOL HandleEvent(const CEntityEvent &ee) {
     if (ee.ee_slEvent == EVENTCODE_ETrigger) {
-      ETrigger &eTrigger = (ETrigger &)ee;
-      _SwcWorldChange.strGroup = m_strGroup;      // group name
-      _SwcWorldChange.plLink = GetPlacement();    // link placement
-      _SwcWorldChange.iType = (INDEX)m_EwltType;  // type
-      _SwcWorldChange.storedFlags = GetStoredFlags();
-      _pNetwork->ChangeLevel(m_strWorld, m_bStoreWorld, 0);
+      m_bIsActivated = TRUE;
+      return TRUE;
+    }
+    if (ee.ee_slEvent == EVENTCODE_EStart) {
+      m_bIsActivated = TRUE;
+      return TRUE;
+    }
+    if (ee.ee_slEvent == EVENTCODE_EStop) {
+      m_bIsActivated = FALSE;
       return TRUE;
     }
     return FALSE;
   };
   
-  CDynamicArray<CTString> GetStoredFlags() {
-    INDEX ctMarkers = _pNetwork->GetNumberOfEntitiesWithName("WorldLinkFlag");
-    CDynamicArray<CTString> arrFlags;
-
-    return arrFlags;
-  };
+  // returns bytes of memory used by this object
+  SLONG GetUsedMemory(void)
+  {
+    // initial
+    SLONG slUsedMemory = sizeof(CWorldLinkFlag) - sizeof(CEntity) + CEntity::GetUsedMemory();
+    // add some more
+    slUsedMemory += m_strFlagName.Length();
+    slUsedMemory += m_bIsActivated.Length();
+    return slUsedMemory;
+  }
 
 procedures:
 /************************************************************
@@ -80,9 +77,8 @@ procedures:
     SetModelMainTexture(TEXTURE_WORLDLINK);
 
     // set name
-    m_strName.PrintF("World link - %s", m_strGroup);
+    m_strName.PrintF("World link flag - %s", m_strFlagName);
 
     return;
   }
-
 };

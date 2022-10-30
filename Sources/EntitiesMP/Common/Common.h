@@ -117,6 +117,7 @@ struct WorldChange {
   CTString strGroup;      // group name
   CPlacement3D plLink;    // link placement for relative change
   INDEX iType;            // change type
+  CDynamicArray<CTString> storedFlags;
 };
 extern struct WorldChange _SwcWorldChange;
 
