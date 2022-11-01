@@ -2157,6 +2157,8 @@ CEntity *CNetworkLibrary::GetEntityWithName(const CTString &strName, INDEX iEnti
   }}
   return pen;
 }
+
+
 /* Test if a given player is local to this computer. */
 BOOL CNetworkLibrary::IsPlayerLocal(CEntity *pen)
 {

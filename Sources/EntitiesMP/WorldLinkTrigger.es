@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 class CWorldLinkTrigger : CRationalEntity {
 name      "WorldLinkTrigger";
 thumbnail "Thumbnails\\WorldLink.tbn";
-features  "HasName", "HasTarget";
+features  "HasName", "HasTarget", "IsTargetable";
 
 properties:
   1 CTString m_strName               "Name" 'N' = "Marker",
@@ -35,7 +35,7 @@ components:
 
 
 functions:
-
+  
   // returns bytes of memory used by this object
   SLONG GetUsedMemory(void)
   {
@@ -47,17 +47,25 @@ functions:
     return slUsedMemory;
   }
 
-
-
 procedures:
 
   SendEventToTarget() {
+    CPrintF( "Check trigger %g\n", m_strFlagName); 
+
     BOOL shouldTrigger = FALSE;
     
+    //CPrintF( "Flags COunt: %g\n", _SwcWorldChange.storedFlags.Count());
+
     {FOREACHINDYNAMICARRAY(_SwcWorldChange.storedFlags, CTString, ites) {
       CTString &flag = *ites;
 
+      
+      //CPrintF( "Parsing flag %g\n", flag); 
+
       if (flag == m_strFlagName){
+      
+        CPrintF( "Activating %g\n", m_strFlagName); 
+        
         shouldTrigger = TRUE;
       }
     }}
@@ -66,6 +74,8 @@ procedures:
     {
       return;
     }
+    
+    //CPrintF( "Triggering %g\n", m_strFlagName); 
 
     SendToTarget(m_penTarget, m_eetEvent, this);
     return;
@@ -88,9 +98,19 @@ procedures:
 
     
     wait() {
+      on (EStart) : {
+        call SendEventToTarget(); 
+        stop;
+      }
+      on (ETrigger) : {
+        call SendEventToTarget(); 
+        stop;
+      }
       on (EPostLevelChange) : {
         call SendEventToTarget(); 
+        stop;
       }
+      otherwise (): { resume; }
     }
   }
 };
