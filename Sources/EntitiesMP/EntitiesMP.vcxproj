@@ -389,6 +389,8 @@ copy Debug\$(TargetName).lib $(SolutionDir)..\Bin\Debug\ &gt;nul</Command>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StdH.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="WorldLink.cpp" />
+    <ClCompile Include="WorldLinkFlag.cpp" />
+    <ClCompile Include="WorldLinkTrigger.cpp" />
     <ClCompile Include="WorldSettingsController.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -707,7 +709,11 @@ copy Debug\$(TargetName).lib $(SolutionDir)..\Bin\Debug\ &gt;nul</Command>
     <ClInclude Include="WorldBase.h" />
     <ClInclude Include="WorldBase_tables.h" />
     <ClInclude Include="WorldLink.h" />
+    <ClInclude Include="WorldLinkTrigger.h" />
+    <ClInclude Include="WorldLinkTrigger_tables.h" />
     <ClInclude Include="WorldLink_tables.h" />
+    <ClInclude Include="WorldLinkFlag.h" />
+    <ClInclude Include="WorldLinkFlag_tables.h" />
     <ClInclude Include="WorldSettingsController.h" />
     <ClInclude Include="WorldSettingsController_tables.h" />
   </ItemGroup>
@@ -2120,6 +2126,17 @@ ecc EntitiesMP/%(Filename).es </Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EntitiesMP/%(Filename).es</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
+    <CustomBuild Include="WorldLinkTrigger.es">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cd $(SolutionDir)
+ecc EntitiesMP/%(Filename).es </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">EntitiesMP/%(Filename).es</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cd $(SolutionDir)
+ecc EntitiesMP/%(Filename).es </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EntitiesMP/%(Filename).es</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).cpp;%(Outputs)</Outputs>
+    </CustomBuild>
     <CustomBuild Include="WorldLink.es">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cd $(SolutionDir)
@@ -2638,6 +2655,9 @@ ecc EntitiesMP/%(Filename).es </Command>
       <FileType>Document</FileType>
     </CustomBuild>
     <CustomBuild Include="..\..\Flesh\Classes\WorldLink.ecl">
+      <FileType>Document</FileType>
+    </CustomBuild>
+    <CustomBuild Include="..\..\Flesh\Classes\WorldLinkFlag.ecl">
       <FileType>Document</FileType>
     </CustomBuild>
     <CustomBuild Include="..\..\Flesh\Classes\WorldSettingsController.ecl">

@@ -544,6 +544,12 @@
     <ClCompile Include="WorldSettingsController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WorldLinkFlag.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldLinkTrigger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Common.h">
@@ -1488,6 +1494,18 @@
     <ClInclude Include="WorldSettingsController_tables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WorldLinkFlag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldLinkFlag_tables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldLinkTrigger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldLinkTrigger_tables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="NavigationMarker.es">
@@ -2362,6 +2380,12 @@
     </CustomBuild>
     <CustomBuild Include="..\..\Flesh\Data\Messages\Enemies\Woman.txt">
       <Filter>Messages</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\Flesh\Classes\WorldLinkFlag.ecl">
+      <Filter>Links To Package</Filter>
+    </CustomBuild>
+    <CustomBuild Include="WorldLinkTrigger.es">
+      <Filter>Class Files\Tools</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

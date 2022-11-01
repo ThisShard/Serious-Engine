@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 %}
 
 uses "EntitiesMP/Marker";
+uses "EntitiesMP/WorldLinkFlag";
 
 // world link
 enum WorldLinkType {
@@ -52,21 +53,38 @@ functions:
       _SwcWorldChange.strGroup = m_strGroup;      // group name
       _SwcWorldChange.plLink = GetPlacement();    // link placement
       _SwcWorldChange.iType = (INDEX)m_EwltType;  // type
-      _SwcWorldChange.storedFlags = GetStoredFlags();
+      _SwcWorldChange.storedFlags = FillStoredFlags(_SwcWorldChange.storedFlags);
       _pNetwork->ChangeLevel(m_strWorld, m_bStoreWorld, 0);
       return TRUE;
     }
     return FALSE;
   };
   
-  CDynamicArray<CTString> GetStoredFlags() {
+  CDynamicArray<CTString> FillStoredFlags(CDynamicArray<CTString> &arrFlags) {
     INDEX ctMarkers = _pNetwork->GetNumberOfEntitiesWithName("WorldLinkFlag");
-    CDynamicArray<CTString> arrFlags;
+
+    arrFlags.Clear();
+
+    {for(INDEX iMarker=0; iMarker<ctMarkers; iMarker++) {
+      CWorldLinkFlag *pFlag = (CWorldLinkFlag *)_pNetwork->GetEntityWithName("WorldLinkFlag", iMarker);
+      if (pFlag==NULL) {
+          continue;
+      }
+
+      if (pFlag->m_bIsActivated == FALSE){
+        continue;
+      }
+
+      CTString *arrFlag = arrFlags.New(1);
+      *arrFlag = pFlag->m_strFlagName;
+    }}
 
     return arrFlags;
   };
 
 procedures:
+
+
 /************************************************************
  *                       M  A  I  N                         *
  ************************************************************/

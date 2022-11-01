@@ -18,15 +18,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "StdH.h"
 %}
 
-class CWorldLinkFlag : CEntity {
-name      "WorldLinkFlag";
+class CWorldLinkTrigger : CRationalEntity {
+name      "WorldLinkTrigger";
 thumbnail "Thumbnails\\WorldLink.tbn";
-features  "HasName", "IsTargetable";
+features  "HasName", "HasTarget";
 
 properties:
   1 CTString m_strName               "Name" 'N' = "Marker",
   2 CTString m_strFlagName           "Flag name" 'G' = "",
-  3 BOOL m_bIsActivated              "Flag is activated" 'S' = FALSE,
+  4 enum EventEType m_eetEvent     "Event type" 'G' = EET_TRIGGER,
+  3 CEntityPointer m_penTarget       "Target" 'T' COLOR(C_RED|0xFF),
 
 components:
   1 model   MODEL_WORLDLINK     "Models\\Editor\\WorldLink.mdl",
@@ -34,37 +35,42 @@ components:
 
 
 functions:
-/************************************************************
- *                      START EVENT                         *
- ************************************************************/
-  BOOL HandleEvent(const CEntityEvent &ee) {
-    if (ee.ee_slEvent == EVENTCODE_ETrigger) {
-      m_bIsActivated = TRUE;
-      return TRUE;
-    }
-    if (ee.ee_slEvent == EVENTCODE_EStart) {
-      m_bIsActivated = TRUE;
-      return TRUE;
-    }
-    if (ee.ee_slEvent == EVENTCODE_EStop) {
-      m_bIsActivated = FALSE;
-      return TRUE;
-    }
-    return FALSE;
-  };
-  
+
   // returns bytes of memory used by this object
   SLONG GetUsedMemory(void)
   {
     // initial
-    SLONG slUsedMemory = sizeof(CWorldLinkFlag) - sizeof(CEntity) + CEntity::GetUsedMemory();
+    SLONG slUsedMemory = sizeof(CWorldLinkTrigger) - sizeof(CRationalEntity) + CRationalEntity::GetUsedMemory();
     // add some more
-    slUsedMemory += m_strFlagName.Length();
     slUsedMemory += m_strName.Length();
+    slUsedMemory += m_strFlagName.Length();
     return slUsedMemory;
   }
 
+
+
 procedures:
+
+  SendEventToTarget() {
+    BOOL shouldTrigger = FALSE;
+    
+    {FOREACHINDYNAMICARRAY(_SwcWorldChange.storedFlags, CTString, ites) {
+      CTString &flag = *ites;
+
+      if (flag == m_strFlagName){
+        shouldTrigger = TRUE;
+      }
+    }}
+
+    if (!shouldTrigger)
+    {
+      return;
+    }
+
+    SendToTarget(m_penTarget, m_eetEvent, this);
+    return;
+  };
+
 /************************************************************
  *                       M  A  I  N                         *
  ************************************************************/
@@ -78,8 +84,13 @@ procedures:
     SetModelMainTexture(TEXTURE_WORLDLINK);
 
     // set name
-    m_strName.PrintF("World link flag - %s", m_strFlagName);
+    m_strName.PrintF("World link trigger - %s", m_strFlagName);
 
-    return;
+    
+    wait() {
+      on (EPostLevelChange) : {
+        call SendEventToTarget(); 
+      }
+    }
   }
 };
