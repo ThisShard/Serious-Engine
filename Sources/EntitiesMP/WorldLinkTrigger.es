@@ -28,6 +28,7 @@ properties:
   2 CTString m_strFlagName           "Flag name" 'G' = "",
   4 enum EventEType m_eetEvent     "Event type" 'G' = EET_TRIGGER,
   3 CEntityPointer m_penTarget       "Target" 'T' COLOR(C_RED|0xFF),
+  5 BOOL m_bAutoStart             "Auto start" 'A' = TRUE,   // trigger auto starts
 
 components:
   1 model   MODEL_WORLDLINK     "Models\\Editor\\WorldLink.mdl",
@@ -64,7 +65,7 @@ procedures:
 
       if (flag == m_strFlagName){
       
-        CPrintF( "Activating %g\n", m_strFlagName); 
+        //CPrintF( "Activating %g\n", m_strFlagName); 
         
         shouldTrigger = TRUE;
       }
@@ -95,20 +96,23 @@ procedures:
 
     // set name
     m_strName.PrintF("World link trigger - %s", m_strFlagName);
-
+    
+    // spawn in world editor
+    autowait(0.1f);
     
     wait() {
       on (EStart) : {
         call SendEventToTarget(); 
-        stop;
       }
       on (ETrigger) : {
         call SendEventToTarget(); 
-        stop;
       }
-      on (EPostLevelChange) : {
-        call SendEventToTarget(); 
-        stop;
+      on (EBegin) : { 
+        // if auto start send event on init
+        if (m_bAutoStart) {
+          call SendEventToTarget(); 
+        }
+        resume;
       }
       otherwise (): { resume; }
     }
