@@ -550,6 +550,9 @@
     <ClCompile Include="WorldLinkTrigger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TeleportField.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Common.h">
@@ -1506,6 +1509,12 @@
     <ClInclude Include="WorldLinkTrigger_tables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TeleportField.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TeleportField_tables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="NavigationMarker.es">
@@ -2385,6 +2394,9 @@
       <Filter>Links To Package</Filter>
     </CustomBuild>
     <CustomBuild Include="WorldLinkTrigger.es">
+      <Filter>Class Files\Tools</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TeleportField.es">
       <Filter>Class Files\Tools</Filter>
     </CustomBuild>
   </ItemGroup>

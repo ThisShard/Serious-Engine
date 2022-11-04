@@ -368,6 +368,7 @@ copy Debug\$(TargetName).lib $(SolutionDir)..\Bin\Debug\ &gt;nul</Command>
     <ClCompile Include="TacticsChanger.cpp" />
     <ClCompile Include="TacticsHolder.cpp" />
     <ClCompile Include="Teleport.cpp" />
+    <ClCompile Include="TeleportField.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TextFXHolder.cpp" />
     <ClCompile Include="TimeController.cpp" />
@@ -677,6 +678,8 @@ copy Debug\$(TargetName).lib $(SolutionDir)..\Bin\Debug\ &gt;nul</Command>
     <ClInclude Include="TacticsHolder.h" />
     <ClInclude Include="TacticsHolder_tables.h" />
     <ClInclude Include="Teleport.h" />
+    <ClInclude Include="TeleportField.h" />
+    <ClInclude Include="TeleportField_tables.h" />
     <ClInclude Include="Teleport_tables.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Terrain_tables.h" />
@@ -2083,6 +2086,17 @@ ecc EntitiesMP/%(Filename).es </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="TouchField.es">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cd $(SolutionDir)
+ecc EntitiesMP/%(Filename).es </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">EntitiesMP/%(Filename).es</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cd $(SolutionDir)
+ecc EntitiesMP/%(Filename).es </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EntitiesMP/%(Filename).es</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).cpp;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="TeleportField.es">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cd $(SolutionDir)
 ecc EntitiesMP/%(Filename).es </Command>
